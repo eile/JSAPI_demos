@@ -4,17 +4,15 @@ require([
   "app/syncUtil"
 ], function (WebScene, SceneView, syncUtil) {
 
-  var websceneTop = new WebScene({
-   portalItem: {
-     id: "19dcff93eeb64f208d09d328656dd492"
-   }
+  var params = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+    params[key] = value;
   });
 
-  var websceneBottom = new WebScene({
-    portalItem: {
-      id: "19dcff93eeb64f208d09d328656dd492"
-    }
-  });
+  var webscene = params["webscene"] || "19dcff93eeb64f208d09d328656dd492";
+  var websceneTop = new WebScene({ portalItem: { id: webscene }});
+  var websceneBottom = new WebScene({ portalItem: { id: webscene }});
+
 
   var viewTop = new SceneView({
     container: "viewTop",
