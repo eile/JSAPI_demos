@@ -36,7 +36,8 @@ require([
     }
   });
 
-  viewTop.resourceController._memoryController.disableMemCache();
+  var mc = viewTop.resourceController._memoryController;
+  mc.disableMemCache();
 
   // Clear the top-left corner to make place for the title
   viewTop.ui.empty("top-left");
@@ -45,4 +46,10 @@ require([
   // synchronize the two views
   syncUtil.syncViews(viewTop, viewBottom);
 
+  mc = viewBottom.resourceController._memoryController
+  viewBottom.resourceController.memoryEvents.on("memory-used", function()  {
+    document.getElementById("stats").innerHTML = "Memory: " + (mc._memoryUsed * mc._maxMemory).toFixed() + "MB<br>"+
+      "Cache: " + (mc._cacheStorage._size / 1048576).toFixed() + "MB<br>"+
+      "Hit Rate: " + Math.round(100 * mc._cacheStorage._getHitRate()) + "%";
+  });
 });
