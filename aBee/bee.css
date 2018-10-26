@@ -1,0 +1,9 @@
+@import 'custom.css';
+
+#view {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+  
+    

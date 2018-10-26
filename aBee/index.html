@@ -4,28 +4,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1">
-  <title>MemCache Demo</title>
+  <title>A/B API Version Comparison</title>
   <link rel="stylesheet" href="../../../arcgis-js-api-4/esri/css/main.css">
   <link rel="stylesheet" href="custom.css">
   <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
   <script>
     var dojoConfig = {
+      async: true,
       packages: [{
         name: "app",
         location: location.pathname.replace(/\/[^/]+$/, "") + "/app"
-      }],
-      async: true
+      }]
     };
   </script>
-  <script src="../../../arcgis-js-api-4/test-apps/dojo-config.js"></script>
-  <script src="../../../arcgis-js-api-4/dojo/dojo.js"></script>
+  <script src="https://js.arcgis.com/4.9"></script>
 </head>
 
 <body>
-  <div id="viewBottom" touch-action="none"></div>
-  <div id="viewTop" touch-action="none"></div>
+  <div id="view"></div>
   <div id="stats"></div>
-  <header>MemCache Demo</header>
+
+  <iframe id="viewRight" src="./bee.html" marginwidth=0 marginheight=0 frameborder=0></iframe>
+
+  <header>Released API</header>
   <script>
     require([
       "app/main",

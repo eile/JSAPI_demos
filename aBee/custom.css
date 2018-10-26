@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css?family=Fascinate');
+
+* {
+  margin:0;
+  padding:0 
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  background-color: floralwhite;
+}
+
+#view {
+  height: 100%;
+  width: 50%;
+}
+
+#viewRight {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  height: 100%;
+  width: 50%;
+}
+
+.esri-component.esri-attribution.esri-widget {
+  opacity: 0.6;
+  background-color: transparent;
+}
+
+
+#stats {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  height: 50%;
+  width: 20%;
+  padding: 20px;
+  font-family: 'Fascinate', cursive;
+  font-size: 1em;
+}
+
+header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 20px;
+  font-family: 'Fascinate', cursive;
+  font-size: 1.7em;
+  z-index: 2;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
