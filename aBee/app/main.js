@@ -1,13 +1,17 @@
 require([
+  "dojo/has",
   "esri/WebScene",
   "esri/views/SceneView",
   "app/syncUtil"
-], function (WebScene, SceneView, syncUtil) {
+], function (has, WebScene, SceneView, syncUtil) {
 
   var params = {};
   var parts = window.parent.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
     params[key] = value;
   });
+
+  // two API versions likely use two different cache versions which are not supported concurrently
+  has.add("disable-feature:idb-cache", 1);
 
   var webscene = params["webscene"] || "19dcff93eeb64f208d09d328656dd492";
   var webscene = new WebScene({ portalItem: { id: webscene }});
