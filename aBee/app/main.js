@@ -10,8 +10,7 @@ require([
     params[key] = value;
   });
 
-  // two API versions likely use two different cache versions which are not supported concurrently
-  has.add("disable-feature:idb-cache", 1);
+  has.add("disable-feature:single-idb-cache", 1);
 
   var webscene = params["webscene"] || "19dcff93eeb64f208d09d328656dd492";
   var webscene = new WebScene({ portalItem: { id: webscene }});
