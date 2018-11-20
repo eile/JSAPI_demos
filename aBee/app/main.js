@@ -19,7 +19,7 @@ require([
     map: webscene,
     environment: {
       lighting: {
-        directShadowsEnabled: true,
+        // directShadowsEnabled: true,
         ambientOcclusionEnabled: false
       }
     }

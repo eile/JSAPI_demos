@@ -47,7 +47,7 @@ define(["esri/Viewpoint", "esri/core/watchUtils"], function(Viewpoint, watchUtil
             if (slide.id === newValue.data.slide) {
               var slideNoViewpoint = slide.clone();
               slideNoViewpoint.viewpoint = null;
-              slideNoViewpoint.applyTo(view);
+              slideNoViewpoint.applyTo(view, {ignoreViewpoint: true});
             }
           });
         } else {
