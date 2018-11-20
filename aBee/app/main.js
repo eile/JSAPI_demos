@@ -31,6 +31,41 @@ require([
   // synchronize the two views
   syncUtil.syncView(view);
 
+  var slidesDiv = document.getElementById("slides");
+  if (slidesDiv) {
+    // The view must be ready (or resolved) before you can
+    // access the properties of the WebScene
+    view.when(function() {
+
+      // The slides are a collection inside the presentation
+      // property of the WebScene
+      var slides = webscene.presentation.slides;
+
+      // Loop through each slide in the collection
+      slides.forEach(function(slide) {
+
+        // Create a new <div> element for each slide and place the title of
+        // the slide in the element.
+        var slideElement = document.createElement("div");
+        slideElement.id = slide.id;
+        slideElement.classList.add("slide");
+
+        // Create a new <img> element and place it inside the newly created <div>.
+        // This will reference the thumbnail from the slide.
+        var img = new Image();
+        img.src = slide.thumbnail.url;
+        img.title = slide.title.text;
+        slideElement.appendChild(img);
+        slidesDiv.appendChild(slideElement);
+
+        slideElement.addEventListener("click", function() {
+          slide.applyTo(view);
+          syncUtil.syncSlide(slide.id);
+        });
+      });
+    });
+  }
+
   mc = view.resourceController._memoryController
   view.resourceController.memoryEvents.on("memory-used", function()  {
     document.getElementById("stats").innerHTML = 

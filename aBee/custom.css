@@ -38,10 +38,23 @@ body {
   top: 50px;
   left: 10px;
   height: 50%;
-  width: 20%;
+  width: 50%;
   padding: 20px;
   font-family: "Avenir Next W01","Avenir Next W00","Avenir Next","Avenir","Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 1em;
+}
+
+#slides {
+  position: absolute;
+  bottom: 30px;
+  left: 20px;
+  height: 70px;
+  width: 90%;
+}
+
+.slide {
+  display: inline-block;
+  margin-right: 10px;
 }
 
 header {

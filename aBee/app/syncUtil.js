@@ -2,9 +2,11 @@
 // based on code from sample: https://developers.arcgis.com/javascript/latest/sample-code/sandbox/index.html?sample=views-synchronize
 
 define(["esri/Viewpoint", "esri/core/watchUtils"], function(Viewpoint, watchUtils) {
+  var channel;
+
   return {
     syncView: function(view) {
-      var channel = new BroadcastChannel('aBee.view.sync');
+      channel = new BroadcastChannel('aBee.view.sync');
 
       var viewpointWatchHandle;
       var interactWatcher;
@@ -40,8 +42,22 @@ define(["esri/Viewpoint", "esri/core/watchUtils"], function(Viewpoint, watchUtil
       });
   
       channel.onmessage = function (newValue) {
-        view.viewpoint = Viewpoint.fromJSON(newValue.data);
+        if (newValue.data.slide) {
+          view.map.presentation.slides.forEach(function(slide) {
+            if (slide.id === newValue.data.slide) {
+              var slideNoViewpoint = slide.clone();
+              slideNoViewpoint.viewpoint = null;
+              slideNoViewpoint.applyTo(view);
+            }
+          });
+        } else {
+          view.viewpoint = Viewpoint.fromJSON(newValue.data);
+        }
       }
+    },
+
+    syncSlide: function(slideId) {
+      channel.postMessage({slide: slideId});
     }
   }
 });
