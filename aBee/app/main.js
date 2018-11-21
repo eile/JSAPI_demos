@@ -12,7 +12,7 @@ require([
 
   has.add("disable-feature:single-idb-cache", 1);
 
-  var webscene = params["webscene"] || "19dcff93eeb64f208d09d328656dd492";
+  var webscene = params["webscene"] || "46c47340708f446ba7f112f139e8ae5e";
   var webscene = new WebScene({ portalItem: { id: webscene }});
   var view = new SceneView({
     container: "view",
@@ -69,8 +69,7 @@ require([
   mc = view.resourceController._memoryController
   view.resourceController.memoryEvents.on("memory-used", function()  {
     document.getElementById("stats").innerHTML = 
-      "Memory: " + (mc._memoryUsed * mc._maxMemory).toFixed() + " of " + mc._maxMemory.toFixed() + "MB<br>"+
-      "Cache: " + (mc._cacheStorage._size / 1048576).toFixed() + " of " + (mc._cacheStorage._maxSize / 1048576).toFixed() + "MB<br>"+
-      "Hit Rate: " + Math.round(100 * mc._cacheStorage._getHitRate()) + "%";
+      "Memory: " + (mc._memoryUsed * mc._maxMemory).toFixed() + " of " + mc._maxMemory.toFixed() + "MB<br>" +
+      "Cache: " + (mc._cacheStorage._size / 1048576).toFixed() + " of " + (mc._cacheStorage._maxSize / 1048576).toFixed() + "MB<br>";
   });
 });
