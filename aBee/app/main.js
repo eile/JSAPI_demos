@@ -1,9 +1,10 @@
 require([
   "dojo/has",
   "esri/WebScene",
+  "esri/layers/Layer",
   "esri/views/SceneView",
   "app/syncUtil"
-], function (has, WebScene, SceneView, syncUtil) {
+], function (has, WebScene, Layer, SceneView, syncUtil) {
 
   var params = {};
   var parts = window.parent.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -12,8 +13,18 @@ require([
 
   has.add("disable-feature:single-idb-cache", 1);
 
-  var webscene = params["webscene"] || "46c47340708f446ba7f112f139e8ae5e";
-  var webscene = new WebScene({ portalItem: { id: webscene }});
+  var url =  params["url"]
+  var webscene;
+  if (url) {
+    webscene = new WebScene({basemap: "topo", ground: "world-elevation"});
+    Layer.fromArcGISServerUrl({url: url}).then(function(layer){
+      webscene.layers.add(layer);
+    });
+  } else {
+    webscene = params["webscene"] || "46c47340708f446ba7f112f139e8ae5e";
+    webscene = new WebScene({ portalItem: { id: webscene }});
+  }
+
   var view = new SceneView({
     container: "view",
     map: webscene,
