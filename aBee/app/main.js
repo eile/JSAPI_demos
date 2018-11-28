@@ -1,10 +1,11 @@
 require([
   "dojo/has",
+  "esri/config",
   "esri/WebScene",
   "esri/layers/Layer",
   "esri/views/SceneView",
   "app/syncUtil"
-], function (has, WebScene, Layer, SceneView, syncUtil) {
+], function (has, config, WebScene, Layer, SceneView, syncUtil) {
 
   var params = {};
   var parts = window.parent.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -12,6 +13,11 @@ require([
   });
 
   has.add("disable-feature:single-idb-cache", 1);
+
+  var portal = params["portal"];
+  if (portal) {
+    config.portalUrl = portal;
+  }
 
   var url =  params["url"]
   var webscene;
