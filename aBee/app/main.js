@@ -25,6 +25,12 @@ require([
     webscene = new WebScene({basemap: "topo", ground: "world-elevation"});
     Layer.fromArcGISServerUrl({url: url}).then(function(layer){
       webscene.layers.add(layer);
+      layer.when(function(){
+        return layer.queryExtent();
+      })
+      .then(function(response){
+        view.goTo(response.extent);
+      });
     });
   } else {
     webscene = params["webscene"] || "46c47340708f446ba7f112f139e8ae5e";
@@ -34,12 +40,6 @@ require([
   var view = new SceneView({
     container: "view",
     map: webscene,
-    environment: {
-      lighting: {
-        // directShadowsEnabled: true,
-        ambientOcclusionEnabled: false
-      }
-    }
   });
 
   // Clear the top-left corner to make place for the title
