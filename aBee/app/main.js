@@ -19,7 +19,7 @@ require([
     config.portalUrl = portal;
   }
 
-  var url =  params["url"]
+  var url = params["url"]
   var webscene;
   if (url) {
     webscene = new WebScene({basemap: "topo", ground: "world-elevation"});
@@ -83,10 +83,13 @@ require([
     });
   }
 
-  mc = view.resourceController._memoryController
-  view.resourceController.memoryEvents.on("memory-used", function()  {
+  var rc = view.resourceController;
+  var mc = rc.memoryController || rc._memoryController;
+  function updateMemoryStats() {
     document.getElementById("stats").innerHTML = 
       "Memory: " + (mc._memoryUsed * mc._maxMemory).toFixed() + " of " + mc._maxMemory.toFixed() + "MB<br>" +
       "Cache: " + (mc._cacheStorage._size / 1048576).toFixed() + " of " + (mc._cacheStorage._maxSize / 1048576).toFixed() + "MB<br>";
-  });
+  };
+  rc.memoryEvents && rc.memoryEvents.on("memory-used", updateMemoryStats); // 4.10 and early
+  mc.events && mc.events.on("memory-used", updateMemoryStats); // 4.11 and later
 });
