@@ -83,13 +83,25 @@ require([
     });
   }
 
-  var rc = view.resourceController;
-  var mc = rc.memoryController || rc._memoryController;
-  function updateMemoryStats() {
-    document.getElementById("stats").innerHTML = 
-      "Memory: " + (mc._memoryUsed * mc._maxMemory).toFixed() + " of " + mc._maxMemory.toFixed() + "MB<br>" +
-      "Cache: " + (mc._cacheStorage._size / 1048576).toFixed() + " of " + (mc._cacheStorage._maxSize / 1048576).toFixed() + "MB<br>";
+  function updateStats() {
+    setTimeout(updateStats, 1000);
+    if (view.getStats){
+      var stats = view.getStats();
+      var textContent = "";
+      var keys = Object.keys(stats);
+      for (var i = 0 ; i < keys.length; ++i) {
+        textContent += "<br/>" + keys[i] + ": " + stats[keys[i]];
+      }
+
+      document.getElementById("stats").innerHTML = textContent;
+    } else {
+      var rc = view.resourceController;
+      var mc = rc.memoryController || rc._memoryController;
+          document.getElementById("stats").innerHTML = 
+        "Memory: " + (mc._memoryUsed * mc._maxMemory).toFixed() + " of " + mc._maxMemory.toFixed() + "MB<br>" +
+        "Cache: " + (mc._cacheStorage._size / 1048576).toFixed() + " of " + (mc._cacheStorage._maxSize / 1048576).toFixed() + "MB<br>";
+    }
   };
-  rc.memoryEvents && rc.memoryEvents.on("memory-used", updateMemoryStats); // 4.10 and early
-  mc.events && mc.events.on("memory-used", updateMemoryStats); // 4.11 and later
+
+  setTimeout(updateStats, 1000);
 });
