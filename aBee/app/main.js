@@ -58,7 +58,7 @@ require([
     view.when(function() {
       // The slides are a collection inside the presentation
       // property of the WebScene
-      var slides = webscene.presentation.slides;
+      var slides = view.map.presentation.slides;
 
       // Loop through each slide in the collection
       slides.forEach(function(slide) {
