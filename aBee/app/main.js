@@ -4,9 +4,10 @@ require([
   "esri/request",
   "esri/WebScene",
   "esri/layers/Layer",
+  "esri/views/MapView",
   "esri/views/SceneView",
   "app/syncUtil"
-], function(has, config, esriRequest, WebScene, Layer, SceneView, syncUtil) {
+], function(has, config, esriRequest, WebScene, Layer, MapView, SceneView, syncUtil) {
   var params = {};
   var parts = window.parent.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
     params[key] = value;
@@ -19,7 +20,10 @@ require([
     config.portalUrl = portal;
   }
 
-  var view = new SceneView({ container: "view", map: webscene });
+  var sceneView = document.getElementById("SceneView");
+  var view = sceneView
+    ? new SceneView({ container: "SceneView", map: webscene })
+    : new MapView({ container: "MapView", map: webscene, constraints: { snapToZoom: false } });
   var url = params["url"];
 
   if (url) {
@@ -114,5 +118,5 @@ require([
     }
   }
 
-  setTimeout(updateStats, 1000);
+  sceneView && setTimeout(updateStats, 5000);
 });

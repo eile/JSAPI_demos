@@ -14,7 +14,8 @@ body {
   background-color: floralwhite;
 }
 
-#view {
+#SceneView,
+#MapView {
   height: 100%;
   width: 50%;
 }
@@ -46,8 +47,8 @@ body {
 
 #slides {
   position: absolute;
-  top: 70px;
-  left: 10px;
+  top: 10px;
+  right: 10px;
 }
 
 header {
