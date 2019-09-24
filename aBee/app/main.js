@@ -28,6 +28,7 @@ require([
     : new MapView({ container: "MapView", map: webscene, constraints: { snapToZoom: false } });
   var url = params["url"];
   var animate = params["animate"];
+  var stats = params["stats"];
 
   if (url) {
     view.map = new WebScene({ basemap: "topo", ground: "world-elevation" });
@@ -137,7 +138,8 @@ require([
     document.getElementById("stats").innerHTML = textContent;
   }
 
-  sceneView &&
+  !!stats &&
+    sceneView &&
     watchUtils.whenTrueOnce(view, "ready").then(function() {
       setTimeout(updateStats, 1);
     });
