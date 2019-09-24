@@ -3,11 +3,13 @@ require([
   "esri/config",
   "esri/request",
   "esri/WebScene",
+  "esri/core/watchUtils",
   "esri/layers/Layer",
   "esri/views/MapView",
   "esri/views/SceneView",
+  "esri/views/support/waitForResources",
   "app/syncUtil"
-], function(has, config, esriRequest, WebScene, Layer, MapView, SceneView, syncUtil) {
+], function(has, config, esriRequest, WebScene, watchUtils, Layer, MapView, SceneView, waitForResources, syncUtil) {
   var params = {};
   var parts = window.parent.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m, key, value) {
     params[key] = value;
@@ -25,6 +27,7 @@ require([
     ? new SceneView({ container: "SceneView", map: webscene })
     : new MapView({ container: "MapView", map: webscene, constraints: { snapToZoom: false } });
   var url = params["url"];
+  var animate = params["animate"];
 
   if (url) {
     view.map = new WebScene({ basemap: "topo", ground: "world-elevation" });
@@ -53,21 +56,37 @@ require([
   view.ui.empty("top-left");
 
   // synchronize the two views
-  syncUtil.syncView(view);
+  if (!animate) {
+    syncUtil.syncView(view);
+  }
 
-  var slidesDiv = document.getElementById("slides");
-  if (slidesDiv) {
-    // The view must be ready (or resolved) before you can
-    // access the properties of the WebScene
-    view.when(function() {
-      // The slides are a collection inside the presentation
-      // property of the WebScene
-      var slides = view.map.presentation.slides;
+  // The view must be ready (or resolved) before you can
+  // access the properties of the WebScene
+  view.when(function() {
+    var slides = view.map.presentation.slides;
 
-      // Loop through each slide in the collection
+    if (!!animate) {
+      var current = -1;
+      function nextSlide() {
+        ++current;
+        if (current >= slides.length) {
+          return;
+        }
+
+        slides.getItemAt(current).applyTo(view);
+        waitForResources(view, nextSlide);
+      }
+
+      waitForResources(view, nextSlide);
+      return;
+    }
+
+    var slidesDiv = document.getElementById("slides");
+    if (slidesDiv) {
+      // The slides are a collection inside the presentation property of the WebScene
+
       slides.forEach(function(slide) {
-        // Create a new <div> element for each slide and place the title of
-        // the slide in the element.
+        // Create a new <div> element for each slide and place the title of the slide in the element.
         var slideElement = document.createElement("div");
         slideElement.id = slide.id;
         slideElement.classList.add("slide");
@@ -85,25 +104,24 @@ require([
           syncUtil.syncSlide(slide.id);
         });
       });
-    });
-  }
+    }
+  });
 
   function updateStats() {
     setTimeout(updateStats, 1000);
+    var textContent = "";
+
     if (view.getStats) {
       var stats = view.getStats();
-      var textContent = "";
       var keys = Object.keys(stats);
       for (var i = 0; i < keys.length; ++i) {
         textContent += "<br/>" + keys[i] + ": " + stats[keys[i]];
       }
-
-      document.getElementById("stats").innerHTML = textContent;
     } else {
       var rc = view.resourceController;
       var mc = rc.memoryController || rc._memoryController;
       if (mc && mc._cacheStorage) {
-        document.getElementById("stats").innerHTML =
+        textContent =
           "Memory: " +
           (mc._memoryUsed * mc._maxMemory).toFixed() +
           " of " +
@@ -116,7 +134,11 @@ require([
           "MB<br>";
       }
     }
+    document.getElementById("stats").innerHTML = textContent;
   }
 
-  sceneView && setTimeout(updateStats, 5000);
+  sceneView &&
+    watchUtils.whenTrueOnce(view, "ready").then(function() {
+      setTimeout(updateStats, 1);
+    });
 });
