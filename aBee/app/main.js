@@ -57,8 +57,9 @@ require([
   view.ui.empty("top-left");
 
   // synchronize the two views
+  syncUtil.connect(view);
   if (!animate) {
-    syncUtil.syncView(view);
+    syncUtil.syncView();
   }
 
   // The view must be ready (or resolved) before you can
@@ -111,7 +112,7 @@ require([
 
         ++current;
         if (current >= slides.length) {
-          syncUtil.syncView(view);
+          syncUtil.syncView();
           return;
         }
 
@@ -120,7 +121,7 @@ require([
         waitForResources(view, nextSlide);
       }
 
-      waitForResources(view, nextSlide);
+      syncUtil.syncStart(nextSlide);
       return;
     }
 
