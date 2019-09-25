@@ -52,6 +52,10 @@ body {
   text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
+img {
+  border: 1px solid black;
+}
+
 #benchmark {
   position: absolute;
   top: 20px;
