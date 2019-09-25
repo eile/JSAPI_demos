@@ -47,8 +47,17 @@ body {
 
 #slides {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+
+#benchmark {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  text-align: right;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
 header {

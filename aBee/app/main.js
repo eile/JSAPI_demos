@@ -65,16 +65,58 @@ require([
   // access the properties of the WebScene
   view.when(function() {
     var slides = view.map.presentation.slides;
+    var slidesDiv = document.getElementById("slides");
+    var benchmarkDiv = document.getElementById("benchmark");
+
+    function addSlide(slide, time) {
+      var div = slidesDiv || benchmarkDiv;
+      if (!div) {
+        return;
+      }
+
+      // Create a new <div> element for each slide and place the title of the slide in the element.
+      var slideDiv = document.createElement("div");
+      slideDiv.id = slide.id;
+      slideDiv.classList.add("slide");
+
+      if (time) {
+        var textDiv = document.createElement("div");
+        textDiv.innerHTML = time.toFixed(1) + "s";
+        div.appendChild(textDiv);
+      }
+
+      // Create a new <img> element and place it inside the newly created <div>.
+      // This will reference the thumbnail from the slide.
+      var img = new Image();
+      img.src = slide.thumbnail.url;
+      img.title = slide.title.text;
+      slideDiv.appendChild(img);
+      div.appendChild(slideDiv);
+
+      slideDiv.addEventListener("click", function() {
+        slide.applyTo(view);
+        syncUtil.syncSlide(slide.id);
+      });
+    }
 
     if (!!animate) {
       var current = -1;
+      var start = window.performance.now();
+
       function nextSlide() {
+        var time = (window.performance.now() - start) / 1000;
+        if (current >= 0) {
+          addSlide(slides.getItemAt(current), time);
+        }
+
         ++current;
         if (current >= slides.length) {
+          syncUtil.syncView(view);
           return;
         }
 
-        slides.getItemAt(current).applyTo(view);
+        start = window.performance.now();
+        slides.getItemAt(current).applyTo(view, { animate: false });
         waitForResources(view, nextSlide);
       }
 
@@ -82,30 +124,7 @@ require([
       return;
     }
 
-    var slidesDiv = document.getElementById("slides");
-    if (slidesDiv) {
-      // The slides are a collection inside the presentation property of the WebScene
-
-      slides.forEach(function(slide) {
-        // Create a new <div> element for each slide and place the title of the slide in the element.
-        var slideElement = document.createElement("div");
-        slideElement.id = slide.id;
-        slideElement.classList.add("slide");
-
-        // Create a new <img> element and place it inside the newly created <div>.
-        // This will reference the thumbnail from the slide.
-        var img = new Image();
-        img.src = slide.thumbnail.url;
-        img.title = slide.title.text;
-        slideElement.appendChild(img);
-        slidesDiv.appendChild(slideElement);
-
-        slideElement.addEventListener("click", function() {
-          slide.applyTo(view);
-          syncUtil.syncSlide(slide.id);
-        });
-      });
-    }
+    slides.forEach(addSlide(slide));
   });
 
   function updateStats() {
