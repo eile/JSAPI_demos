@@ -125,7 +125,9 @@ require([
       return;
     }
 
-    slides.forEach(addSlide(slide));
+    slides.forEach(function(slide) {
+      addSlide(slide);
+    });
   });
 
   function updateStats() {
