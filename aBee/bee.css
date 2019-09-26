@@ -1,8 +1,0 @@
-@import "custom.css";
-
-#SceneView,
-#MapView {
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
-}
